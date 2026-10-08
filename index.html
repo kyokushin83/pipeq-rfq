@@ -1,0 +1,302 @@
+<!doctype html>
+<html lang="ko">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1" />
+  <title>PIPEQ | 배관자재 4시간 견적</title>
+  <style>
+    :root{
+      --bg:#0f172a;
+      --panel:#111827;
+      --card:#ffffff;
+      --muted:#64748b;
+      --line:#e5e7eb;
+      --soft:#f8fafc;
+      --accent:#2563eb;
+      --accent2:#0ea5e9;
+      --good:#059669;
+      --warn:#ea580c;
+      --text:#0f172a;
+    }
+    *{box-sizing:border-box}
+    body{margin:0;font-family:Arial,"Noto Sans KR",sans-serif;background:#f4f7fb;color:var(--text)}
+    a{text-decoration:none;color:inherit}
+    .top{
+      background:linear-gradient(135deg,#0f172a 0%,#1d4ed8 60%,#0ea5e9 100%);
+      color:white;padding:20px 0 72px;
+    }
+    .wrap{width:min(1180px,92%);margin:auto}
+    nav{display:flex;align-items:center;justify-content:space-between;gap:20px}
+    .brand{font-weight:900;font-size:24px;letter-spacing:-.5px}
+    .brand span{color:#7dd3fc}
+    .navlinks{display:flex;gap:24px;font-size:14px;opacity:.92}
+    .hero{display:grid;grid-template-columns:1.15fr .85fr;gap:36px;align-items:center;padding-top:58px}
+    .badge{display:inline-flex;gap:8px;align-items:center;background:rgba(255,255,255,.12);padding:8px 12px;border-radius:999px;font-size:13px}
+    h1{font-size:52px;line-height:1.1;margin:18px 0 18px;letter-spacing:-2px}
+    .hero p{font-size:18px;line-height:1.65;color:#dbeafe;max-width:720px}
+    .hero-actions{display:flex;gap:12px;margin-top:28px;flex-wrap:wrap}
+    .btn{border:0;border-radius:12px;padding:14px 18px;font-weight:800;cursor:pointer}
+    .btn.primary{background:white;color:#1d4ed8}
+    .btn.ghost{background:rgba(255,255,255,.12);color:white;border:1px solid rgba(255,255,255,.22)}
+    .hero-card{background:white;color:var(--text);border-radius:20px;padding:22px;box-shadow:0 24px 70px rgba(0,0,0,.22)}
+    .hero-card h3{margin:0 0 6px}
+    .quick-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:16px}
+    .quick{background:var(--soft);padding:14px;border-radius:12px;border:1px solid var(--line)}
+    .quick b{display:block;font-size:20px;margin-top:4px}
+    main{margin-top:-36px}
+    .section{background:white;border:1px solid #e8edf5;border-radius:20px;padding:28px;margin-bottom:22px;box-shadow:0 8px 28px rgba(15,23,42,.05)}
+    .section h2{margin:0 0 8px;font-size:26px}
+    .section .sub{color:var(--muted);margin-bottom:24px}
+    .rfq-grid{display:grid;grid-template-columns:1fr 1fr;gap:22px}
+    .drop{
+      border:2px dashed #93c5fd;border-radius:16px;padding:34px;text-align:center;background:#eff6ff;cursor:pointer;
+    }
+    .drop small{color:var(--muted)}
+    .field{display:flex;flex-direction:column;gap:7px;margin-bottom:13px}
+    label{font-size:13px;color:#475569;font-weight:700}
+    input,select,textarea{
+      width:100%;padding:12px 13px;border:1px solid #d8dee9;border-radius:10px;background:white;font-size:14px;
+    }
+    textarea{min-height:96px;resize:vertical}
+    .line-items{display:flex;flex-direction:column;gap:10px}
+    .line-item{
+      display:grid;grid-template-columns:1.1fr .9fr .9fr .8fr .7fr 56px;gap:8px;align-items:center;
+      padding:10px;background:var(--soft);border:1px solid var(--line);border-radius:12px;
+    }
+    .line-item button{border:0;background:#fee2e2;color:#b91c1c;border-radius:8px;height:38px;font-weight:800;cursor:pointer}
+    .add-line{margin-top:10px;background:#e0f2fe;color:#0369a1}
+    .summary{
+      margin-top:18px;padding:16px;border-radius:14px;background:#f8fafc;border:1px solid var(--line);
+      display:grid;grid-template-columns:repeat(3,1fr);gap:12px
+    }
+    .metric{background:white;border:1px solid var(--line);border-radius:12px;padding:14px}
+    .metric span{display:block;color:var(--muted);font-size:12px}
+    .metric strong{font-size:20px}
+    .flow{display:grid;grid-template-columns:repeat(5,1fr);gap:12px;margin-top:22px}
+    .step{padding:16px;border-radius:14px;background:var(--soft);border:1px solid var(--line)}
+    .step i{font-style:normal;font-weight:900;color:var(--accent)}
+    .step b{display:block;margin:8px 0 6px}
+    .step p{font-size:13px;color:var(--muted);line-height:1.5;margin:0}
+    .supplier-table{width:100%;border-collapse:collapse;font-size:14px}
+    .supplier-table th,.supplier-table td{padding:12px 10px;border-bottom:1px solid var(--line);text-align:left}
+    .supplier-table th{font-size:12px;color:#64748b;background:#f8fafc}
+    .tag{display:inline-block;padding:5px 8px;border-radius:999px;font-size:12px;font-weight:800}
+    .tag.good{background:#dcfce7;color:#166534}
+    .tag.warn{background:#ffedd5;color:#9a3412}
+    .bottom-cta{
+      display:flex;justify-content:space-between;align-items:center;gap:20px;
+      background:#0f172a;color:white;border-radius:18px;padding:24px;margin:24px 0 40px;
+    }
+    .bottom-cta p{color:#cbd5e1;margin:6px 0 0}
+    footer{color:#64748b;font-size:12px;padding:0 0 30px;text-align:center}
+    .toast{
+      position:fixed;right:20px;bottom:20px;background:#111827;color:white;padding:13px 16px;border-radius:10px;
+      box-shadow:0 10px 30px rgba(0,0,0,.2);display:none
+    }
+    @media(max-width:900px){
+      .hero,.rfq-grid{grid-template-columns:1fr}
+      h1{font-size:40px}
+      .flow{grid-template-columns:1fr 1fr}
+      .line-item{grid-template-columns:1fr 1fr}
+      .navlinks{display:none}
+    }
+  </style>
+</head>
+<body>
+  <header class="top">
+    <div class="wrap">
+      <nav>
+        <div class="brand">PIPE<span>Q</span></div>
+        <div class="navlinks">
+          <a href="#rfq">견적요청</a>
+          <a href="#how">이용방법</a>
+          <a href="#suppliers">공급망</a>
+        </div>
+      </nav>
+
+      <div class="hero">
+        <div>
+          <div class="badge">⚡ 일반 배관자재 영업시간 기준 4시간 이내 1차 견적</div>
+          <h1>배관자재 견적,<br>한 번에 끝내세요.</h1>
+          <p>
+            파이프·엘보·TEE·레듀서·플랜지·밸브까지.
+            견적서 사진, PDF, 엑셀을 올리거나 필요한 규격을 직접 선택하면
+            여러 공급처를 비교해 한 장의 통합 견적으로 회신합니다.
+          </p>
+          <div class="hero-actions">
+            <button class="btn primary" onclick="document.getElementById('rfq').scrollIntoView({behavior:'smooth'})">견적 요청하기</button>
+            <button class="btn ghost" onclick="demoFill()">샘플 견적 불러오기</button>
+          </div>
+        </div>
+
+        <div class="hero-card">
+          <h3>오늘의 견적 현황</h3>
+          <div style="color:#64748b;font-size:13px">데모 화면 · 실제 데이터 연동 전</div>
+          <div class="quick-grid">
+            <div class="quick"><span>평균 1차 회신</span><b>1시간 42분</b></div>
+            <div class="quick"><span>활성 공급처</span><b>84곳</b></div>
+            <div class="quick"><span>최근 단가 DB</span><b>12,480건</b></div>
+            <div class="quick"><span>견적 처리율</span><b>96%</b></div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </header>
+
+  <main class="wrap">
+    <section class="section" id="rfq">
+      <h2>빠른 견적 요청</h2>
+      <div class="sub">견적서 파일을 올리거나 품목을 직접 입력하세요. 특수규격은 공급처 확인 후 별도 안내됩니다.</div>
+
+      <div class="rfq-grid">
+        <div>
+          <div class="drop" onclick="document.getElementById('fileInput').click()">
+            <div style="font-size:36px">📄</div>
+            <b>견적서 / 발주서 업로드</b>
+            <div style="margin-top:8px;color:#475569">PDF · Excel · JPG · PNG</div>
+            <small>파일명은 데모에서만 표시됩니다.</small>
+            <input id="fileInput" type="file" hidden multiple onchange="showFiles(this.files)" />
+          </div>
+          <div id="fileNames" style="font-size:13px;color:#475569;margin-top:10px"></div>
+
+          <div class="field" style="margin-top:18px">
+            <label>현장명</label>
+            <input id="siteName" placeholder="예: 부산 강서구 ○○공장 보수공사" />
+          </div>
+          <div class="field">
+            <label>배송지역</label>
+            <input id="location" placeholder="예: 부산 강서구" />
+          </div>
+          <div class="field">
+            <label>요청사항</label>
+            <textarea id="memo" placeholder="예: KS 제품 우선 / 성적서 필요 / 내일 오전 현장 도착 희망"></textarea>
+          </div>
+        </div>
+
+        <div>
+          <div class="line-items" id="lineItems"></div>
+          <button class="btn add-line" onclick="addLine()">+ 품목 추가</button>
+
+          <div class="summary">
+            <div class="metric"><span>입력 품목</span><strong id="itemCount">0개</strong></div>
+            <div class="metric"><span>예상 공급처 비교</span><strong id="supplierCount">0곳</strong></div>
+            <div class="metric"><span>1차 회신 목표</span><strong>4시간 이내</strong></div>
+          </div>
+
+          <button class="btn" style="width:100%;margin-top:14px;background:#2563eb;color:white" onclick="submitRFQ()">견적 요청 제출</button>
+        </div>
+      </div>
+    </section>
+
+    <section class="section" id="how">
+      <h2>어떻게 돌아가나</h2>
+      <div class="sub">사이트는 쇼핑몰이 아니라 ‘견적 자동화 + 통합 조달’에 초점을 둡니다.</div>
+      <div class="flow">
+        <div class="step"><i>01</i><b>견적 접수</b><p>사진·PDF·엑셀 또는 옵션 선택으로 품목을 접수합니다.</p></div>
+        <div class="step"><i>02</i><b>규격 정규화</b><p>재질·사이즈·SCH·규격·수량을 표준 항목으로 변환합니다.</p></div>
+        <div class="step"><i>03</i><b>공급처 비교</b><p>최근 매입단가, 납기, 배송지역을 기준으로 후보를 비교합니다.</p></div>
+        <div class="step"><i>04</i><b>통합 견적</b><p>품목별 최적 공급처를 조합해 고객에게는 견적서 한 장으로 보냅니다.</p></div>
+        <div class="step"><i>05</i><b>현장 직송</b><p>재고를 과도하게 쌓지 않고 공급처에서 현장으로 직송합니다.</p></div>
+      </div>
+    </section>
+
+    <section class="section" id="suppliers">
+      <h2>공급처 매칭 예시</h2>
+      <div class="sub">실제 서비스에서는 최근 매입단가·납기·클레임·배송 가능지역을 누적해 추천 정확도를 높입니다.</div>
+      <div style="overflow:auto">
+        <table class="supplier-table">
+          <thead>
+            <tr><th>품목</th><th>규격</th><th>추천 공급처</th><th>최근 단가</th><th>납기</th><th>상태</th></tr>
+          </thead>
+          <tbody id="supplierRows">
+            <tr><td>SUS304 90° ELBOW</td><td>50A SCH10S</td><td>공급처 A</td><td>최근가 있음</td><td>당일</td><td><span class="tag good">추천</span></td></tr>
+            <tr><td>TEE</td><td>100A × 50A SCH40</td><td>공급처 B</td><td>7일 전</td><td>1일</td><td><span class="tag good">추천</span></td></tr>
+            <tr><td>Gate Valve</td><td>50A 10K</td><td>공급처 C</td><td>45일 전</td><td>확인 필요</td><td><span class="tag warn">재확인</span></td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+
+    <div class="bottom-cta">
+      <div>
+        <b style="font-size:22px">배관자재는 ‘상품 검색’보다 ‘견적 통합’이 먼저입니다.</b>
+        <p>초기에는 가격을 전부 공개하지 않고, 견적 속도와 통합 조달 편의성을 경쟁력으로 가져가는 구조입니다.</p>
+      </div>
+      <button class="btn primary" onclick="document.getElementById('rfq').scrollIntoView({behavior:'smooth'})">지금 견적 요청</button>
+    </div>
+
+    <footer>PIPEQ Prototype · Demo only</footer>
+  </main>
+
+  <div class="toast" id="toast"></div>
+
+<script>
+  const materials = ["탄소강","백관","SUS304","SUS316"];
+  const products = ["파이프","90° 엘보","45° 엘보","정티","이경티","동심 레듀서","편심 레듀서","플랜지","볼밸브","게이트밸브","체크밸브"];
+  const sizes = ["15A","20A","25A","32A","40A","50A","65A","80A","100A","125A","150A","200A","250A","300A","400A"];
+  const schedules = ["일반","SCH10S","SCH20","SCH40","SCH80"];
+
+  function options(arr){ return arr.map(v=>`<option>${v}</option>`).join(""); }
+
+  function addLine(data={}){
+    const wrap=document.getElementById("lineItems");
+    const row=document.createElement("div");
+    row.className="line-item";
+    row.innerHTML=`
+      <select class="product">${options(products)}</select>
+      <select class="material">${options(materials)}</select>
+      <select class="size">${options(sizes)}</select>
+      <select class="sch">${options(schedules)}</select>
+      <input class="qty" type="number" min="1" value="${data.qty || 1}" />
+      <button onclick="this.parentElement.remove();updateSummary()">×</button>
+    `;
+    wrap.appendChild(row);
+    if(data.product) row.querySelector(".product").value=data.product;
+    if(data.material) row.querySelector(".material").value=data.material;
+    if(data.size) row.querySelector(".size").value=data.size;
+    if(data.sch) row.querySelector(".sch").value=data.sch;
+    row.querySelectorAll("select,input").forEach(el=>el.addEventListener("change",updateSummary));
+    updateSummary();
+  }
+
+  function updateSummary(){
+    const count=document.querySelectorAll(".line-item").length;
+    document.getElementById("itemCount").textContent=count+"개";
+    document.getElementById("supplierCount").textContent=(count ? Math.min(3+count*2, 18) : 0)+"곳";
+  }
+
+  function showFiles(files){
+    const box=document.getElementById("fileNames");
+    box.innerHTML=[...files].map(f=>"• "+f.name).join("<br>");
+  }
+
+  function demoFill(){
+    document.getElementById("lineItems").innerHTML="";
+    addLine({product:"90° 엘보",material:"SUS304",size:"50A",sch:"SCH10S",qty:20});
+    addLine({product:"이경티",material:"탄소강",size:"100A",sch:"SCH40",qty:8});
+    addLine({product:"게이트밸브",material:"탄소강",size:"50A",sch:"일반",qty:4});
+    document.getElementById("siteName").value="부산 ○○공장 배관 보수";
+    document.getElementById("location").value="부산 강서구";
+    document.getElementById("memo").value="성적서 필요 / 가능하면 내일 오전 납품";
+    toast("샘플 견적을 불러왔습니다.");
+  }
+
+  function submitRFQ(){
+    const count=document.querySelectorAll(".line-item").length;
+    if(!count && !document.getElementById("fileInput").files.length){
+      toast("품목을 추가하거나 견적서 파일을 업로드해 주세요.");
+      return;
+    }
+    toast("견적 요청이 접수된 것으로 가정한 데모입니다.");
+  }
+
+  function toast(msg){
+    const el=document.getElementById("toast");
+    el.textContent=msg; el.style.display="block";
+    setTimeout(()=>el.style.display="none",2600);
+  }
+
+  addLine();
+</script>
+</body>
+</html>
